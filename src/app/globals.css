@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Calm, mostly-white theme: one blue for actions and highlights, neutral grays
+ * for everything else.
+ */
+@theme {
+  /* Blue: 500 is the action color (white text on it is 5.6:1). */
+  --color-brand-50: #f0f6fd;
+  --color-brand-100: #e1edfa;
+  --color-brand-200: #c3daf4;
+  --color-brand-300: #93bce9;
+  --color-brand-400: #3d86d4;
+  --color-brand-500: #0a66c2;
+  --color-brand-600: #0858a8;
+  --color-brand-700: #074a8c;
+  --color-brand-800: #063c71;
+  --color-brand-900: #052f58;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Neutrals: 900 for headings, 500/600 for secondary text (both ≥ 4.5:1). */
+  --color-ink-50: #f7f8fa;
+  --color-ink-100: #eef0f3;
+  --color-ink-200: #e3e6ea;
+  --color-ink-300: #c9ced5;
+  --color-ink-400: #9aa1ac;
+  --color-ink-500: #6b7280;
+  --color-ink-600: #545a65;
+  --color-ink-700: #2b3038;
+  --color-ink-800: #20242b;
+  --color-ink-900: #181b20;
+  --color-ink-950: #0f1114;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-chart: #0a66c2;
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  /* Logo pin drops in once (backwards fill so hover can still move it). */
+  --animate-pin: pin-drop 0.7s cubic-bezier(0.3, 1.5, 0.6, 1) 0.1s backwards;
+
+  @keyframes pin-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-40%);
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #f9fafb;
+  color: var(--color-ink-900);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-[80rem] px-5 sm:px-8 lg:px-10;
+}
+@utility eyebrow {
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-500;
+}
+@utility page-title {
+  @apply font-display text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl;
+}
+@utility section-title {
+  @apply font-display text-2xl font-semibold tracking-tight text-ink-900;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-150 outline-none focus-visible:ring-[3px] focus-visible:ring-brand-400/50 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primary {
+  @apply btn bg-brand-500 text-white hover:bg-brand-600;
+}
+@utility btn-outline {
+  @apply btn border border-ink-200 bg-white text-brand-500 hover:border-brand-200 hover:bg-brand-50;
+}
+@utility btn-ghost {
+  @apply btn border border-ink-200 bg-white text-ink-800 hover:bg-ink-100;
+}
+@utility btn-whatsapp {
+  @apply btn bg-[#157a42] text-white hover:bg-[#10612f];
+}
+@utility card {
+  @apply rounded-xl border border-ink-200/80 bg-white;
+}
+/* Cards that lead somewhere: blue border and a soft shadow on hover. */
+@utility card-link {
+  @apply card transition-all duration-200 hover:border-brand-200 hover:shadow-[0_6px_20px_-8px_rgba(16,24,40,0.16)];
+}
+@utility panel {
+  @apply rounded-xl border border-ink-200 bg-ink-50;
+}
+@utility input {
+  @apply w-full rounded-lg border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 transition placeholder:text-ink-400 focus:border-brand-400 focus:outline-none focus:ring-[3px] focus:ring-brand-400/40;
+}
+/* Input with an icon inside (search, location): the frame takes the focus ring. */
+@utility field {
+  @apply flex h-10 w-full items-center gap-2 rounded-lg border border-ink-200 bg-white px-3 text-ink-400 transition-colors focus-within:border-brand-400 focus-within:ring-[3px] focus-within:ring-brand-400/40 [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-sm [&>input]:text-ink-900 [&>input]:outline-none [&>input]:placeholder:text-ink-400;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-medium text-ink-800;
+}
+@utility chip {
+  @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-ink-100 px-2 py-0.5 text-xs text-ink-600;
+}
+@utility tag {
+  @apply inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-brand-200 bg-white px-2 py-0.5 text-xs text-brand-600;
+}
+@utility link-arrow {
+  @apply inline-flex items-center gap-1 text-sm font-semibold text-brand-500 transition hover:text-brand-700 [&>svg]:transition-transform hover:[&>svg]:translate-x-0.5 hover:[&>svg]:-translate-y-0.5;
+}
+
+/* Sections fade up as they scroll into view (browsers without scroll-driven
+   animations simply show them). */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
